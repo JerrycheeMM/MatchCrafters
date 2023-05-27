@@ -22,7 +22,7 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        return new QRUserResource($user);
+        return $user->account_number;
     }
 
     public function qrUser(Request $request, $accountNumber)
