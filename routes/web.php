@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::group(['middleware' => ['auth']], function() {
+Route::group(['middleware' => ['auth', 'must-be-merchant']], function() {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/transactions', [App\Http\Controllers\TransactionPageController::class, 'index'])->name('transactions.page.index');
     Route::get('/transactions/export', [App\Http\Controllers\TransactionPageController::class, 'export'])->name('transactions.page.export');
