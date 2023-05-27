@@ -114,7 +114,7 @@ class TransactionController extends Controller
 
         $status = $request->input('status');
 
-        $transaction->update(['status' => $request]);
+        $transaction->update(['status' => $request->status]);
 
         if ($status == Transaction::STATUS_REJECTED) {
             $user->increment('balance', round($transaction->amount, 2));
