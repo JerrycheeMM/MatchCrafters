@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LoginResource;
+use App\Helpers\RequestFieldCryptoHelper;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
 
 class LoginController extends Controller
 {
@@ -18,15 +17,15 @@ class LoginController extends Controller
      * Validate the user login request.
      * Overridden to decrypt username and password before validation.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      * @return void
      *
      */
     protected function validateLogin(Request $request)
     {
         $request->validate([
-            $this->username() => ['required', 'string'],
-            'password' => ['required', 'string']
+            $this->username() => 'required|string',
+            'password' => 'required|string',
         ]);
     }
 
@@ -40,57 +39,49 @@ class LoginController extends Controller
         return 'email';
     }
 
-    public function login(Request $request)
+
+    public function attemptLogin(Request $request): bool
     {
-        $this->validateLogin($request);
-
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if (method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-
-            return $this->sendLockoutResponse($request);
-        }
-
-        if ($this->attemptLogin($request)) {
-            if ($request->hasSession()) {
-                $request->session()->put('auth.password_confirmed_at', time());
-            }
-
-            $user = $this->guard()->user();
-            $token = $user->createToken(config('app.name'))->accessToken->token;
-
-            return new LoginResource($user, $token);
-        }
-
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        $this->incrementLoginAttempts($request);
-
-        return $this->sendFailedLoginResponse($request);
+        return $this->guard()->attempt(
+            $this->credentials($request), $request->boolean('remember')
+        );
     }
 
     /**
      * Send the response after the user was authenticated.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     protected function sendLoginResponse(Request $request)
     {
-//        $request->session()->regenerate();
+        $user = $this->guard()->user();
+        $token = $user->createToken(config('app.name'))->accessToken;
 
-        $this->clearLoginAttempts($request);
+//        $user->logoutEverywhere(false);
 
-        if ($response = $this->authenticated($request, $this->guard()->user())) {
-            return $response;
-        }
+        return new JsonResponse([
+            'message' => 'success',
+            'access_token' => $token,
+            'email' => $user->email
+        ], 200);
+    }
 
-        return $request->wantsJson()
-            ? new JsonResponse([], 204)
-            : redirect()->intended($this->redirectPath());
+    public function logout(Request $request)
+    {
+        $this->revokeAllTokens($request->user());
+
+        return new JsonResponse([
+            'message' => 'success'
+        ], 200);
+    }
+
+    /**
+     * This is for single session login.
+     *
+     */
+    protected function revokeAllTokens($user): void
+    {
+        $user->logoutEverywhere();
     }
 }

@@ -11,6 +11,11 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
 });
 
+Route::group(['middleware' => ['auth:api']], function() {
+    Route::post('/logout', [LoginController::class, 'logout']);
+});
+
+
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('/{userId}', [UserController::class, 'show']);

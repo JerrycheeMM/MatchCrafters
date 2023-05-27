@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
+use Laravel\Passport\RefreshToken;
+use Laravel\Passport\Token;
 
 class User extends Authenticatable
 {
@@ -56,5 +57,21 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'merchant_user_id');
+    }
+
+
+    public function logoutEverywhere($includingSelf = true)
+    {
+        if ($includingSelf) {
+            $tokens = $this->tokens->pluck('id');
+        } else {
+            $latestTokenId = $this->tokens()->latest()->first()->id;
+            $tokens = $this->tokens->whereNotIn('id', $latestTokenId)->pluck('id');
+        }
+
+        Token::whereIn('id', $tokens)
+            ->update(['revoked' => true]);
+
+        RefreshToken::whereIn('access_token_id', $tokens)->update(['revoked' => true]);
     }
 }
