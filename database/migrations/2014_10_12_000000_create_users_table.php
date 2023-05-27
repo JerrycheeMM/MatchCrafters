@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('branch_name')->nullable();
             $table->string('role')->default(User::ROLE_USER);
             $table->timestamp('email_verified_at')->nullable();
+            $table->float('balance');
+            $table->uuid('account_number')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

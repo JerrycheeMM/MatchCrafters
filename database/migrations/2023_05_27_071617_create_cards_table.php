@@ -16,8 +16,6 @@ return new class extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('currency');
-            $table->string('balance');
             $table->string('type');
             $table->string('issuer_id_number');
             $table->string('card_holder_name');

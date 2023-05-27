@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -15,6 +16,9 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     const ROLE_USER = 'USER';
+    const ROLE_MERCHANT = 'MERCHANT';
+    const ROLE_WITHDRAWAL_MERCHANT = 'WITHDRAWAL_MERCHANT';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -50,9 +54,14 @@ class User extends Authenticatable
         return $this->hasMany(Card::class);
     }
 
-    public function receivingTransaction(): MorphMany
+    public function receivingTransactions()
     {
-        return $this->morphMany(Transaction::class, 'receivable');
+        return $this->hasMany(Transaction::class, 'receiver_id');
+    }
+
+    public function sendingTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'sender_id');
     }
 
     public function logoutEverywhere($includingSelf = true)

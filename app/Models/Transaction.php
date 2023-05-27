@@ -10,13 +10,26 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    public function card()
+    const DIRECTION_SEND = 'SEND';
+    const DIRECTION_RECEIVE = 'RECEIVE';
+
+    const TYPE_MONEY_ADDED = 'MONEY_ADDED';
+    const TYPE_QRPAY = 'QRPAY';
+    const TYPE_CARD_TRANSACTION = 'CARD_TRANSACTION';
+    const TYPE_CASH_WITHDRAWAL = 'CASH_WITHDRAWAL';
+
+    const STATUS_REJECTED = 'STATUS_REJECTED';
+    const STATUS_PENDING = 'STATUS_PENDING';
+    const STATUS_SUCCESS = 'STATUS_SUCCESS';
+
+
+    public function sender()
     {
-        return $this->belongsTo(Card::class);
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function receivable(): MorphTo
+    public function receiver()
     {
-        return $this->morphTo();
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 }

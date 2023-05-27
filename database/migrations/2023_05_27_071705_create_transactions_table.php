@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('card_id');
-            $table->morphs('receivable');
+            $table->unsignedBigInteger('sender_id');
+            $table->unsignedBigInteger('receiver_id');
             $table->string('type');
             $table->string('currency', 3);
             $table->string('description')->nullable();
+            $table->string('status');
             $table->float('amount');
             $table->timestamps();
         });

@@ -18,14 +18,4 @@ class Card extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function sendingTransaction()
-    {
-        return $this->belongsTo(Transaction::class);
-    }
-
-    public function receivingTransaction(): MorphMany
-    {
-        return $this->morphMany(Transaction::class, 'receivable');
-    }
 }

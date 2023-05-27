@@ -25,8 +25,6 @@ class CardController extends Controller
     {
         $user = $request->user();
         $computedInput = [
-            'currency' => 'MYR',
-            'balance' => 0,
             'type' => 'DEBIT',
             'issuer_id_number' => (new Card)->generateNanoid(16),
             'ccv' => (new Card)->generateNanoid(3),

@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Laravel\Nova\Nova;
 
 class RegisterController extends Controller
@@ -67,6 +68,8 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'name' => $data['name'],
+            'account_number' => (string) Str::orderedUuid(),
+            'balance' => 0
         ]);
         $user->save();
 
