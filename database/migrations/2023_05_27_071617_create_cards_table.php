@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('ccv', 3);
             $table->boolean('is_active')->default(0);
             $table->date('expiry_date')->nullable();
+            $table->string('card_design_id')->nullable();
             $table->timestamps();
         });
     }
