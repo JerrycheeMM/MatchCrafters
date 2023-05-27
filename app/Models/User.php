@@ -49,11 +49,6 @@ class User extends Authenticatable
         return $this->hasMany(Card::class);
     }
 
-    public function prefunds()
-    {
-        return $this->hasMany(Prefund::class, 'prefund_user_id');
-    }
-
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'merchant_user_id');

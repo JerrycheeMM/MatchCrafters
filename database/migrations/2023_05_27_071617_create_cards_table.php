@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('issuer_id_number');
             $table->string('card_holder_name');
             $table->string('ccv', 3);
-            $table->string('status');
+            $table->boolean('is_active')->default(0);
             $table->date('expiry_date')->nullable();
             $table->timestamps();
         });
