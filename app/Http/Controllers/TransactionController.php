@@ -83,12 +83,12 @@ class TransactionController extends Controller
                 'status' => Transaction::STATUS_SUCCESS,
                 'amount' => $amount
             ]);
-            $receiverUser->increment('balance', round($amount, 2));
         }
 
         $transactions->sender()->associate($user);
         $transactions->receiver()->associate($receiverUser);
         $transactions->save();
+
         $increment = round($amount, 2) * -1;
         $user->increment('balance', $increment);
 
@@ -104,15 +104,21 @@ class TransactionController extends Controller
         $user = $request->user();
         $transaction = Transaction::findOrFail($transactionId);
 
-        if ($transaction->status != Transaction::STATUS_PENDING &&
-            $transaction->receiver_id != $user->id &&
-            $transaction->receiver->role != User::ROLE_WITHDRAWAL_MERCHANT &&
+        if ($transaction->status != Transaction::STATUS_PENDING ||
+            $transaction->receiver_id != $user->id ||
+            $transaction->receiver->role != User::ROLE_WITHDRAWAL_MERCHANT ||
             $transaction->withdrawal_security_code != $request->input('withdrawal_security_code')
         ) {
             return response()->json('You cannot edit transaction status.', 403);
         }
 
-        $transaction->update(['status' => $request->input('status')]);
+        $status = $request->input('status');
+
+        $transaction->update(['status' => $request]);
+
+        if ($status == Transaction::STATUS_REJECTED) {
+            $user->increment('balance', round($transaction->amount, 2));
+        }
 
         return new TransactionResource($transaction);
     }

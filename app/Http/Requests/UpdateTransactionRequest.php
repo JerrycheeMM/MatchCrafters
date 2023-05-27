@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Transaction;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTransactionRequest extends FormRequest
 {
@@ -24,8 +26,10 @@ class UpdateTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => 'required',
-            'withdrawal_security_code' => 'required'
+            'status' => ['required', Rule::in([Transaction::STATUS_SUCCESS, Transaction::STATUS_REJECTED])],
+            'withdrawal_security_code' => [
+                'required'
+            ]
         ];
     }
 }

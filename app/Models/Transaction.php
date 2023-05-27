@@ -21,9 +21,9 @@ class Transaction extends Model
     const TYPE_CARD_TRANSACTION = 'CARD_TRANSACTION';
     const TYPE_CASH_WITHDRAWAL = 'CASH_WITHDRAWAL';
 
-    const STATUS_REJECTED = 'STATUS_REJECTED';
-    const STATUS_PENDING = 'STATUS_PENDING';
-    const STATUS_SUCCESS = 'STATUS_SUCCESS';
+    const STATUS_REJECTED = 'REJECTED';
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_SUCCESS = 'SUCCESS';
 
     protected $guarded = [];
 
