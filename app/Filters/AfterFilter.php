@@ -10,6 +10,6 @@ class AfterFilter implements Filter
 
     public function __invoke(Builder $query, $value, string $property)
     {
-        return is_null($value) ? $query : $query->after($value);
+        return is_null($value) ? $query : $query->where('created_at', '>=', $value);
     }
 }

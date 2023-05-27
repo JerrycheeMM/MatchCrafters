@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Traits\InteractsWithNanoid;
 
 class Transaction extends Model
 {
-    use HasFactory;
+    use HasFactory, InteractsWithNanoid;
+
+    public $nanoidLength = 8;
 
     const DIRECTION_SEND = 'SEND';
     const DIRECTION_RECEIVE = 'RECEIVE';
@@ -21,6 +24,8 @@ class Transaction extends Model
     const STATUS_REJECTED = 'STATUS_REJECTED';
     const STATUS_PENDING = 'STATUS_PENDING';
     const STATUS_SUCCESS = 'STATUS_SUCCESS';
+
+    protected $guarded = [];
 
 
     public function sender()

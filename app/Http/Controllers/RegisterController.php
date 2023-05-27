@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Types\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -85,7 +86,7 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
-        $token = $user->createToken('authToken')->accessToken->token;
+        $token = $user->createToken(config('app.name'))->accessToken;
         $user = $this->guard()->user();
 
         return $request->wantsJson() ? new LoginResource($user, $token) : redirect($this->redirectPath());

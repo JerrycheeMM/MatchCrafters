@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCardRequest;
 use App\Http\Requests\UpdateCardRequest;
+use App\Http\Resources\CardIndexResource;
 use App\Http\Resources\CardResource;
 use App\Models\Card;
 use Carbon\Carbon;
@@ -18,7 +19,14 @@ class CardController extends Controller
     {
         $user = $request->user();
 
-        return CardResource::collection($user->cards()->paginate(20));
+        return CardIndexResource::collection($user->cards()->paginate(20));
+    }
+
+    public function show(Request $request, $cardId)
+    {
+        $user = $request->user();
+
+        return new CardResource($user->cards()->find($cardId));
     }
 
     public function store(CreateCardRequest $request): CardResource|JsonResponse

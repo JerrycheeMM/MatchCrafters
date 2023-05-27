@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('status');
             $table->float('amount');
+            $table->string('withdrawal_security_code');
             $table->timestamps();
         });
     }

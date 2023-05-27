@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CardResource extends JsonResource
+class CardIndexResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,6 @@ class CardResource extends JsonResource
             'type' => $this->type,
             'issuer_id_number' => $this->issuer_id_number,
             'card_holder_name' => $this->card_holder_name,
-            'ccv' => $this->ccv,
             'is_active' => $this->is_active,
             'expiry_date' => $this->expiry_date,
             'created_at' => $this->created_at,

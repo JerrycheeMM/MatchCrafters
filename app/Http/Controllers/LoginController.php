@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\RequestFieldCryptoHelper;
+use App\Http\Resources\LoginResource;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -51,20 +52,13 @@ class LoginController extends Controller
      * Send the response after the user was authenticated.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     protected function sendLoginResponse(Request $request)
     {
         $user = $this->guard()->user();
         $token = $user->createToken(config('app.name'))->accessToken;
 
-//        $user->logoutEverywhere(false);
-
-        return new JsonResponse([
-            'message' => 'success',
-            'access_token' => $token,
-            'email' => $user->email
-        ], 200);
+        return $request->wantsJson() ? new LoginResource($user, $token) : redirect($this->redirectPath());
     }
 
     public function logout(Request $request)
