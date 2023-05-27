@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\InteractsWithNanoid;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Card extends Model
 {
@@ -18,8 +19,13 @@ class Card extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function transactions()
+    public function sendingTransaction()
     {
         return $this->belongsTo(Transaction::class);
+    }
+
+    public function receivingTransaction(): MorphMany
+    {
+        return $this->morphMany(Transaction::class, 'receivable');
     }
 }
