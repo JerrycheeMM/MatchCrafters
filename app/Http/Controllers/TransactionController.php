@@ -131,7 +131,7 @@ class TransactionController extends Controller
         }
 
         $transaction->update(['status' => Transaction::STATUS_REJECTED]);
-        $user->increment('balance', round($transaction->amount, 2));
+        $transaction->sender->increment('balance', round($transaction->amount, 2));
 
         return new TransactionResource($transaction);
     }
