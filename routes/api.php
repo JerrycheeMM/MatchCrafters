@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
@@ -13,17 +14,15 @@ Route::middleware(['guest'])->group(function () {
 
 Route::group(['middleware' => ['auth:api']], function() {
     Route::post('/logout', [LoginController::class, 'logout']);
+
+    Route::prefix('cards')->group(function () {
+        Route::get('/', [CardController::class, 'index']);
+        Route::post('', [CardController::class, 'store']);
+        Route::post('{cardId}/update', [CardController::class, 'update']);
+    });
+
 });
 
 
-Route::prefix('users')->group(function () {
-    Route::get('/', [UserController::class, 'index']);
-    Route::get('/{userId}', [UserController::class, 'show']);
-    Route::post('', [UserController::class, 'store']);
-    Route::delete('/{userId}', [UserController::class, 'destroy']);
-    Route::post('/{userId}/update', [UserController::class, 'update']);
-    Route::post('/{userId}/update-email', [UserController::class, 'updateEmail']);
-    Route::post('/{userId}/password/change', [UserController::class, 'adminSendPasswordResetLink']);
-});
 
 

@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\InteractsWithNanoid;
 
 class Card extends Model
 {
     use HasFactory;
+    use InteractsWithNanoid;
+
+    protected $guarded = [];
 
     public function user()
     {
