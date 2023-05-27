@@ -99,7 +99,7 @@ class TransactionController extends Controller
         return new TransactionResource($transactions);
     }
 
-    public function update(UpdateTransactionRequest $request, $transactionId)
+    public function approve(UpdateTransactionRequest $request, $transactionId)
     {
         $user = $request->user();
         $transaction = Transaction::findOrFail($transactionId);
@@ -112,13 +112,26 @@ class TransactionController extends Controller
             return response()->json('You cannot edit transaction status.', 403);
         }
 
-        $status = $request->input('status');
 
-        $transaction->update(['status' => $request->status]);
+        $transaction->update(['status' => Transaction::STATUS_SUCCESS]);
 
-        if ($status == Transaction::STATUS_REJECTED) {
-            $user->increment('balance', round($transaction->amount, 2));
+        return new TransactionResource($transaction);
+    }
+
+    public function reject(UpdateTransactionRequest $request, $transactionId)
+    {
+        $user = $request->user();
+        $transaction = Transaction::findOrFail($transactionId);
+
+        if ($transaction->status != Transaction::STATUS_PENDING ||
+            $transaction->receiver_id != $user->id ||
+            $transaction->receiver->role != User::ROLE_WITHDRAWAL_MERCHANT
+        ) {
+            return response()->json('You cannot edit transaction status.', 403);
         }
+
+        $transaction->update(['status' => Transaction::STATUS_REJECTED]);
+        $user->increment('balance', round($transaction->amount, 2));
 
         return new TransactionResource($transaction);
     }

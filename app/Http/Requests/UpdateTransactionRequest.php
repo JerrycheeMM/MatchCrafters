@@ -26,7 +26,6 @@ class UpdateTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => ['required', Rule::in([Transaction::STATUS_SUCCESS, Transaction::STATUS_REJECTED])],
             'withdrawal_security_code' => [
                 'required'
             ]

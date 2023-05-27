@@ -33,7 +33,8 @@ Route::group(['middleware' => ['auth:api']], function() {
 
     Route::prefix('transactions')->group(function () {
         Route::get('/', [TransactionController::class, 'index']);
-        Route::post('{transactionId}/update', [TransactionController::class, 'update']);
+        Route::post('{transactionId}/approve', [TransactionController::class, 'approve']);
+        Route::post('{transactionId}/reject', [TransactionController::class, 'reject']);
         Route::post('/receiver/{accountNumber}', [TransactionController::class, 'store']);
     });
 });
