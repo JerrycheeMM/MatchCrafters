@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['guest'])->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/register', [RegisterController::class, 'register']);
-    Route::post('/credit-notification', [CreditNotificationController::class, 'store']); // this is for one time usage in postman
+    Route::post('/credit-notification/{accountNumber}', [CreditNotificationController::class, 'store']); // this is for one time usage in postman
 
 });
 

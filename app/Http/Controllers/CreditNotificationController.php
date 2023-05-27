@@ -15,17 +15,19 @@ class CreditNotificationController extends Controller
     public function store(StoreCreditNotificationRequest $request, $accountNumber)
     {
         $receiverUser = User::where('account_number', $accountNumber)->firstOrFail();
+        $amount = $request->input('amount');
 
         $transactions = new Transaction([
             'type' => Transaction::TYPE_MONEY_ADDED,
             'currency' => 'MYR',
             'description' => 'Deposited from ' . (new Card)->generateNanoid(10),
             'status' => Transaction::STATUS_SUCCESS,
-            'amount' => $request->input('amount')
+            'amount' => $amount
         ]);
 
         $transactions->receiver()->associate($receiverUser);
         $transactions->save();
+        $receiverUser->increment('balance', round($amount, 2));
 
         return new TransactionResource($transactions);
     }

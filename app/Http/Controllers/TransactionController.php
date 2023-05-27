@@ -48,9 +48,14 @@ class TransactionController extends Controller
     {
         $user = $request->user();
         $receiverUser = User::where('account_number', $accountNumber)->firstOrFail();
+        $amount = $request->input('amount');
 
         if ($user->id == $receiverUser->id) {
             return response()->json('account_number is invalid.', 400);
+        }
+
+        if ($user->balance < $amount) {
+            return response()->json('Insufficent balance.', 400);
         }
 
         if ($receiverUser->role == User::ROLE_WITHDRAWAL_MERCHANT) {
@@ -59,8 +64,8 @@ class TransactionController extends Controller
                 'currency' => 'MYR',
                 'description' => $request->input('description'),
                 'status' => Transaction::STATUS_PENDING,
-                'amount' => $request->input('amount'),
-                'security_code' => (new Transaction)->generateNanoid(10)
+                'amount' => $amount,
+                'withdrawal_security_code' => (new Transaction)->generateNanoid(10)
             ]);
         } elseif ($receiverUser->role == User::ROLE_MERCHANT) {
             $transactions = new Transaction([
@@ -68,7 +73,7 @@ class TransactionController extends Controller
                 'currency' => 'MYR',
                 'description' => $request->input('description'),
                 'status' => Transaction::STATUS_SUCCESS,
-                'amount' => $request->input('amount')
+                'amount' => $amount
             ]);
         } elseif ($receiverUser->role == User::ROLE_USER) {
             $transactions = new Transaction([
@@ -76,13 +81,20 @@ class TransactionController extends Controller
                 'currency' => 'MYR',
                 'description' => $request->input('description'),
                 'status' => Transaction::STATUS_SUCCESS,
-                'amount' => $request->input('amount')
+                'amount' => $amount
             ]);
+            $receiverUser->increment('balance', round($amount, 2));
         }
 
         $transactions->sender()->associate($user);
         $transactions->receiver()->associate($receiverUser);
         $transactions->save();
+        $increment = round($amount, 2) * -1;
+        $user->increment('balance', $increment);
+
+        if ($receiverUser->role == User::ROLE_USER) {
+            $receiverUser->increment('balance', round($amount, 2));
+        }
 
         return new TransactionResource($transactions);
     }
@@ -100,7 +112,7 @@ class TransactionController extends Controller
             return response()->json('You cannot edit transaction status.', 403);
         }
 
-        $transaction->update($request->input('status'));
+        $transaction->update(['status' => $request->input('status')]);
 
         return new TransactionResource($transaction);
     }

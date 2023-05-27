@@ -19,14 +19,15 @@ class TransactionResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'sender' => new QRUserResource($this->sender),
-            'receiver' => new QRUserResource($this->receiver),
-            'direction' => $this->sender_id == $user->id ? Transaction::DIRECTION_SEND : Transaction::DIRECTION_RECEIVE,
+            'direction' => (is_null($user) ? null : $this->sender_id == $user->id) ? Transaction::DIRECTION_SEND : Transaction::DIRECTION_RECEIVE,
             'type' => $this->type,
             'currency' => $this->currency,
             'description' => $this->description,
             'status' => $this->status,
             'amount' => $this->amount,
+            'withdrawal_security_code' => $this->withdrawal_security_code,
+            'sender' => $this->sender ? new QRUserResource($this->sender) : null,
+            'receiver' => $this->receiver ? new QRUserResource($this->receiver) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];
