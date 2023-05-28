@@ -76,8 +76,7 @@ class TransactionPageController extends Controller
 
         if ($transaction->status != Transaction::STATUS_PENDING ||
             $transaction->receiver_id != $user->id ||
-            $transaction->receiver->role != User::ROLE_WITHDRAWAL_MERCHANT ||
-            $transaction->withdrawal_security_code != $request->input('withdrawal_security_code')
+            $transaction->receiver->role != User::ROLE_WITHDRAWAL_MERCHANT
         ) {
             return back()->with('msg_error', 'Unable to approve order !');
         }
