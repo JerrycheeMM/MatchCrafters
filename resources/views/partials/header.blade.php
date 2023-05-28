@@ -22,7 +22,15 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg order-lg-first">
-                @include('partials.menus.main-menu')
+                <a class="{{ $class ?? '' }}" onclick="document.getElementById('logout-form').submit();">
+                    <i class="fe fe-log-out {{ $iconClass ?? '' }}"></i> Sign out
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">
+                        @csrf
+                        <button type="submit"></button>
+                    </form>
+                </a>
+
+{{--                @include('partials.menus.main-menu')--}}
             </div>
         </div>
     </div>

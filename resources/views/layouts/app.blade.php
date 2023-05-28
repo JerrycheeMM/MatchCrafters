@@ -15,5 +15,5 @@
 @section('page.class', 'page-main')
 
 @section('content')
-    @include('partials.calculator')
+
 @append

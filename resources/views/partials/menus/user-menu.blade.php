@@ -2,14 +2,16 @@
     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
         <span class="ml-2 d-none d-lg-block">
             <span class="text-default">
-              {{ auth()->user()->name }}
-              @if(auth()->user()->isAdmin())
-                  <span class="badge badge-dark ml-2 position-relative">Admin</span>
-              @endif
+              {{ auth()->user() ? auth()->user()->name : null }}
             </span>
         </span>
     </a>
+
     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-        @include('partials.buttons.logout', ['class' => 'dropdown-item', 'iconClass' => 'dropdown-icon'])
+        <i class="fe fe-log-out {{ $iconClass ?? '' }}"></i> Sign out
+        <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">
+            @csrf
+            <button type="submit"></button>
+        </form>
     </div>
 </div>

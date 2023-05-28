@@ -11,7 +11,6 @@
     <script>
         window.App = {
             mixins: [],
-            isPartner: {{ (int) (($user = auth()->user()) ? !$user->isAdmin() : false) }}
         };
     </script>
     <link rel="stylesheet"
