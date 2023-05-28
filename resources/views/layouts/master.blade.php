@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="Content-Language" content="en"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'RemitFX')</title>
+    <title>@yield('title', 'MatchCrafters')</title>
     <script>
         window.App = {
             mixins: [],
@@ -17,7 +17,7 @@
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet"/>
     <!-- Start of moneymatchenterprise Zendesk Widget script -->
-    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=7da16520-3e95-470a-b877-6cf82af0560d"> </script>
+{{--    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=7da16520-3e95-470a-b877-6cf82af0560d"> </script>--}}
     <!-- End of moneymatchenterprise Zendesk Widget script -->
 
     @yield('head')
