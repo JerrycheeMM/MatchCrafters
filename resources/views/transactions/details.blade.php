@@ -1,6 +1,6 @@
 @extends('layouts.partner')
 
-@section('title', 'RemitFX - Transfer ' . $transfer->ref . ' details')
+@section('title', 'MatchCrafters - Transfer ' . $transfer->ref . ' details')
 
 @section('content')
     <!-- Include Bootstrap CSS -->

@@ -1,6 +1,6 @@
 @extends('layouts.partner')
 
-@section('title', 'RemitFX - Transfer Records')
+@section('title', 'MatchCrafters - Transfer Records')
 
 @section('menu.past-transfers', 'active')
 
